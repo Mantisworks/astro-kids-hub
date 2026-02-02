@@ -95,7 +95,7 @@ add_shortcode('astro_kids_hub', function() {
             document.getElementById('game-renderer').innerHTML = '';
         }
 
-        /* --- 1. ESPLORATORE (RIPRISTINATO 3.1) --- */
+        /* --- 1. ESPLORATORE (FIX PASSAPORTO) --- */
         let currentStep = 0;
         const planetsData = [
             { emoji: "🌑", q: "Pianeta più piccolo e vicino al Sole. Chi sono?", a: ["Marte", "Mercurio", "Luna"], correct: 1, info: "Ottimo! Hai identificato Mercurio!" },
@@ -124,10 +124,40 @@ add_shortcode('astro_kids_hub', function() {
                     if(i === planetsData[currentStep].correct) {
                         document.getElementById('log-txt').innerText = planetsData[currentStep].info;
                         log.classList.add('blink-success'); setTimeout(() => log.classList.remove('blink-success'), 600);
-                        if(currentStep < planetsData.length - 1) { currentStep++; setTimeout(renderExplorer, 1500); }
+                        if(currentStep < planetsData.length - 1) { 
+                            currentStep++; 
+                            setTimeout(renderExplorer, 1500); 
+                        } else {
+                            setTimeout(showFinalExplorer, 1500); // Passaggio finale
+                        }
                     } else { log.classList.add('blink-error'); setTimeout(() => log.classList.remove('blink-error'), 600); }
                 }; document.getElementById('ans-btns').appendChild(b);
             });
+        }
+
+        function showFinalExplorer() {
+            const renderer = document.getElementById('game-renderer');
+            renderer.innerHTML = `<div id="alien-game-ui"><div id="space-viewport"><div id="question-box"><h2>🏆 MISSIONE COMPIUTA!</h2><p>Hai mappato con successo il Sistema Solare.<br>Inserisci il tuo nome per ricevere il Passaporto Galattico:</p><input type="text" id="p-name" placeholder="Tuo Nome" style="padding:10px; border-radius:5px; border:none; width:250px; text-align:center; font-size:1.1em; color:#000;"><br><br><button class="btn-game" onclick="genPass()">GENERA PASSAPORTO</button></div></div><div id="passport-wrapper"></div></div>`;
+        }
+
+        function genPass() {
+            const name = document.getElementById('p-name').value || "Esploratore Spaziale";
+            document.getElementById('space-viewport').style.display = 'none';
+            const pass = document.getElementById('passport-wrapper');
+            pass.style.display = 'block';
+            pass.innerHTML = `
+                <p style="margin-top:0; color:#000;"><strong>Nuova Associazione Studi Astronomici</strong></p>
+                <div style="padding:20px; color:#1a237e; border: 4px solid #1a237e; position:relative; background:#fff;">
+                    <h1 style="margin:0; font-size: 28px; color:#1a237e;">PASSAPORTO GALATTICO</h1>
+                    <hr style="border: 1px solid #1a237e;">
+                    <p style="margin:10px 0;">Si certifica che il pilota:</p>
+                    <h2 style="color: #d32f2f; margin: 15px 0; font-size: 32px;">${name}</h2>
+                    <p style="margin:10px 0;">Ha esplorato con successo tutti i pianeti.</p>
+                    <div style="width: 100px; height: 100px; border: 3px dashed #1a237e; border-radius: 50%; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; transform: rotate(-15deg);">NASA BRINDISI</div>
+                </div>
+                <br>
+                <button class="btn-game" onclick="window.print()">🖨️ STAMPA IL TUO TITOLO</button>
+            `;
         }
 
         /* --- 2. BILANCIA (RIPRISTINATO 3.1) --- */
